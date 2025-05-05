@@ -46,6 +46,7 @@ posts = [
 
 posts_dict = {post_item['id']: post_item for post_item in posts}
 
+
 def index(request):
     return render(request, 'blog/index.html', {'posts': list(reversed(posts))})
 
