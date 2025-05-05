@@ -1,5 +1,4 @@
 from django.shortcuts import render
-
 from django.http import Http404
 
 posts = [
@@ -37,7 +36,7 @@ posts = [
         'date': '25 октября 1659 года',
         'category': 'not-my-day',
         'text': """Всю ночь и весь день шёл дождь и дул сильный
-                порывистый ветер. 25 октября.  Корабль за ночь разбило
+                порывистый ветер. 25 октября.  Корабль за ночь разбито
                 в щепки; на том месте, где он стоял, торчат какие-то
                 жалкие обломки,  да и те видны только во время отлива.
                 Весь этот день я хлопотал  около вещей: укрывал и
@@ -45,18 +44,20 @@ posts = [
     },
 ]
 
+posts_dict = {post_item['id']: post_item for post_item in posts}
+
 
 def index(request):
     return render(request, 'blog/index.html', {'posts': list(reversed(posts))})
 
 
 def post_detail(request, id):
-    all_ids = [p['id'] for p in posts]
-    if id not in all_ids:
-        raise Http404(f"Post with id {id} not found")
-    post = next(p for p in posts if p['id'] == id)
+    post = posts_dict.get(id)
+    if not post:
+        raise Http404(f'Post with id {id} not found')
     return render(request, 'blog/detail.html', {'post': post})
 
 
 def category_posts(request, category_slug):
-    return render(request, 'blog/category.html', {'category': category_slug})
+    filtered_posts = [post for post in posts if post['category'] == category_slug]
+    return render(request, 'blog/category.html', {'category': category_slug, 'posts': filtered_posts})
