@@ -44,7 +44,7 @@ posts = [
     },
 ]
 
-posts_dict = {post_item['id']: post_item for post_item in posts}
+posts_by_id = {post['id']: post for post in posts}
 
 
 def index(request):
@@ -52,7 +52,7 @@ def index(request):
 
 
 def post_detail(request, id):
-    post = posts_dict.get(id)
+    post = posts_by_id.get(id)
     if not post:
         raise Http404(f'Post с id {id} не найден')
     return render(request, 'blog/detail.html', {'post': post})
